@@ -5,7 +5,9 @@ module Scramblang
   class Scrambler
     def initialize(definition)
       @library = {
-        "+" => lambda { |args| args.map {|expr| run expr }.join(" ") },
+        "+" => lambda do |args| 
+          args.map { |expr| run expr }.join(" ") 
+        end,
         "*" => lambda do |args| 
           (args.take(args.count - 1) * args.last.to_i).map { |expr| run expr }.join(" ") 
         end
@@ -22,12 +24,13 @@ module Scramblang
       if node.is_a? String
         literal node
       elsif node.is_a? Array
-        @library[node.first].call(node.drop 1)
+        @library[node.first].call(node.drop(1))
       end
     end
 
     def literal node
       if /<(?<moves>.*)>(?<times>\d+)/ =~ node
+        #Literals of the form <R,U>25
         create_sequence(moves, times)
       else
         node
@@ -46,10 +49,10 @@ module Scramblang
     def parse_tokens
       token = @tokens.shift
       if token == "("
-        branch = []
-        branch << parse_tokens until @tokens.first == ")"
+        child = []
+        child << parse_tokens until @tokens.first == ")"
         @tokens.shift
-        branch
+        child
       else
         token
       end

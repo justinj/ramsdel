@@ -4,7 +4,6 @@ module Scramblang
       moves = moves.split(",").product(["'","2",""]).map { |move| move.join }
       @moves = parse_moves moves
       @length = length.to_i
-
     end
 
     def opposite face
