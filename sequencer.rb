@@ -18,8 +18,16 @@ module Scramblang
       end
     end
 
+    def prefix(move)
+      move[0..-2]
+    end
+
     def parse_moves moves
-      default_axes = [[suf("U"), suf("D")], [suf("L"), suf("R")], [suf("F"), suf("B")]]
+      default_axes = [
+        [add_suffixes("U"), add_suffixes("D")], 
+        [add_suffixes("L"), add_suffixes("R")], 
+        [add_suffixes("F"), add_suffixes("B")]
+      ]
       filtered = default_axes.map do |axis|
         axis.map do |face|
           face.select { |move| moves.include? move }
@@ -34,11 +42,10 @@ module Scramblang
       end.reject { |axis| axis.empty? }
     end
 
-    def suf move
+    def add_suffixes move
       ["'","2",""].map { |suffix| move + suffix } | ["w","w2","w'"].map { |suffix| opposite(move) + suffix }
     end
 
-    #[cube [axis [face]]]
     def same_axis?(*moves)
       @moves.any? do |axis|
         moves.all? do |move| 
@@ -55,10 +62,6 @@ module Scramblang
           end
         end
       end
-    end
-
-    def prefix(move)
-      move[0..-2]
     end
 
     def valid_move?(scramble, move)
