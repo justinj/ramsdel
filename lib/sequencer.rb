@@ -5,6 +5,19 @@ module Ramsdel
       @suffixes = puzzle_definition[:suffixes]
     end
 
+    def scramble(length)
+      scramble = []
+      until scramble.count == length
+        new_move = random_move
+        scramble << new_move if valid_move?(scramble, new_move)
+      end
+      scramble.join(" ")
+    end
+
+    def random_move
+      @axes.sample.sample.sample.join
+    end
+
     def make_move_list(puzzle_definition)
       axes = puzzle_definition[:axes]
       suffixes = puzzle_definition[:suffixes]
@@ -29,7 +42,8 @@ module Ramsdel
     end
 
     def suffix(move)
-      @suffixes.find { |suffix| move.end_with?(suffix) && suffix != "" } || ""
+      suffix = @suffixes.sort_by { |s| -s.length }.find { |suffix| move.end_with?(suffix) }
+      suffix || raise("#{move} does not end with a valid suffix")
     end
   end 
 end

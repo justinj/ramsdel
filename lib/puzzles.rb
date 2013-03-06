@@ -1,6 +1,6 @@
 module Ramsdel
   module Puzzles
-    TWO_BY_TWO = {
+    THREE_BY_THREE = {
       :axes => [["F","B"],["R","L"],["U","D"]],
       :suffixes => ["","'","2"]
     }

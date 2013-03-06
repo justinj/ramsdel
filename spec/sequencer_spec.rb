@@ -1,7 +1,30 @@
 require_relative "spec_helper"
 
+
 describe Ramsdel::Sequencer do
-  let(:sequencer) { Ramsdel::Sequencer.new(Ramsdel::Puzzles::TWO_BY_TWO) }
+  class BeValidScramble
+    def matches?(scramble)
+      @scramble = scramble
+      matches_format || @failure = "does not match the format of a scramble"
+      no_subsequent_same_face || @failure = "contains the same face twice in a row"
+
+      @failure.nil?
+    end
+
+    def matches_format
+      @scramble =~ /^((U|D|L|R|F|B)('|2)?\ ?)*$/
+    end
+
+    def no_subsequent_same_face
+      @scramble.split(" ").each_cons(2).all? { |(a,b)| a[0] != b[0] }
+    end
+
+    def failure_message
+      "\"#@scramble\" #@failure"
+    end
+  end
+  let(:sequencer) { Ramsdel::Sequencer.new(Ramsdel::Puzzles::THREE_BY_THREE) }
+  let(:be_valid_scramble) { BeValidScramble.new }
 
   describe "#same_axis?" do
     it "is true if two moves are on the same axis" do
@@ -47,4 +70,26 @@ describe Ramsdel::Sequencer do
       sequencer.suffix("Fw").should eql ""
     end
   end
+
+  describe "#scramble" do
+    # due to the randomness, we should repeat multiple times
+    # to avoid false positives
+    REPETITIONS = 1000
+    it "gives a valid one-move long scramble" do
+      REPETITIONS.times do
+        scramble = sequencer.scramble(1)
+        scramble.should be_valid_scramble
+        scramble.split(" ").count.should eql 1
+      end
+    end
+
+    it "gives a valid two-move long scramble" do
+      REPETITIONS.times do
+        scramble = sequencer.scramble(2)
+        scramble.should be_valid_scramble
+        scramble.split(" ").count.should eql 2
+      end
+    end
+  end
+
 end
