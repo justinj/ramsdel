@@ -16,5 +16,7 @@ RSpec.configure do |config|
   config.order = 'random'
 end
 
-require_relative "../scramblang"
-require_relative "../sequencer"
+require_relative "../lib/scramblang"
+require_relative "../lib/sequencer"
+require_relative "../lib/parser"
+require_relative "../lib/puzzles"

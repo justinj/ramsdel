@@ -1,7 +1,7 @@
 require "pp"
 require_relative "sequencer"
 
-module Scramblang
+module Ramsdel
   class Scrambler
     def initialize(definition)
       @library = {

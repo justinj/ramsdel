@@ -1,19 +1,16 @@
 require_relative "spec_helper"
 
-describe Scramblang::Sequencer do
-  before :all do
-    @seq = Scramblang::Sequencer.new ["R","U"], 10
-  end
+describe Ramsdel::Sequencer do
+  let(:sequencer) { Ramsdel::Sequencer.new(Ramsdel::Puzzles::TWO_BY_TWO) }
 
-  it "can tell if things are on the same axis" do
-    @seq.same_axis?("R", "R").should == true
-    @seq.same_axis?("R2", "R").should == true
-    @seq.same_axis?("R'", "R").should == true
-    @seq.same_axis?("U2", "R").should == false
-  end
+  describe "#opposites?" do
+    it "is true if two moves are opposites" do
+      sequencer.opposites?("F","B").should eql true 
+      sequencer.opposites?("F","B'").should eql true 
+    end
 
-  it "can tell if things are the same face" do
-    @seq.same_face?("R","R'").should == true
-    @seq.same_face?("R","R2").should == true
+    it "is false if two moves are not opposites" do
+      sequencer.opposites?("F","R").should eql false
+    end
   end
 end
