@@ -2,6 +2,7 @@ module Ramsdel
   class Sequencer
     def initialize(puzzle_definition)
       @axes = make_move_list(puzzle_definition)
+      @suffixes = puzzle_definition[:suffixes]
     end
 
     def make_move_list(puzzle_definition)
@@ -24,8 +25,11 @@ module Ramsdel
     end
 
     def prefix(move)
-      #this is probably ugly but I'm tired and I can't tell
-      move.each_char.take([1,move.length-1].max).join
+      @suffixes.inject(move) { |move, suffix| move.chomp suffix }
+    end
+
+    def suffix(move)
+      @suffixes.find { |suffix| move.end_with?(suffix) && suffix != "" } || ""
     end
   end 
 end
