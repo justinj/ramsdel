@@ -5,6 +5,10 @@ module Ramsdel
       @suffixes = puzzle_definition[:suffixes]
     end
 
+    def allow(moves)
+      
+    end
+
     def scramble(length)
       scramble = []
       until scramble.count == length

@@ -114,4 +114,17 @@ describe Ramsdel::Sequencer do
     end
   end
 
+  describe "#allow" do
+    REPETITIONS = 500
+    it "explicitly allows certain moves" do
+      sequencer.allow(["R","U"])
+      REPETITIONS.times do
+        scramble = sequencer.scramble(10)
+        scramble.should be_valid_scramble
+        scramble.should =~ /((R|U)('|2)?){10}/
+        scramble.split(" ").count.should eql 10
+      end
+    end
+  end
+
 end
