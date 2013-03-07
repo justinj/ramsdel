@@ -7,6 +7,7 @@ describe Ramsdel::Sequencer do
       @scramble = scramble
       matches_format || @failure = "does not match the format of a scramble"
       no_subsequent_same_face || @failure = "contains the same face twice in a row"
+      no_same_axis_three_times || @failure = "has redundant moves"
 
       @failure.nil?
     end
@@ -17,6 +18,11 @@ describe Ramsdel::Sequencer do
 
     def no_subsequent_same_face
       @scramble.split(" ").each_cons(2).all? { |(a,b)| a[0] != b[0] }
+    end
+
+    def no_same_axis_three_times
+      sequencer = Ramsdel::Sequencer.new(Ramsdel::Puzzles::THREE_BY_THREE)
+      !@scramble.split(" ").each_cons(3).any? { |moves| sequencer.same_axis?(moves) }
     end
 
     def failure_message
@@ -74,7 +80,7 @@ describe Ramsdel::Sequencer do
   describe "#scramble" do
     # due to the randomness, we should repeat multiple times
     # to avoid false positives
-    REPETITIONS = 1000
+    REPETITIONS = 500
     it "gives a valid one-move long scramble" do
       REPETITIONS.times do
         scramble = sequencer.scramble(1)
@@ -88,6 +94,22 @@ describe Ramsdel::Sequencer do
         scramble = sequencer.scramble(2)
         scramble.should be_valid_scramble
         scramble.split(" ").count.should eql 2
+      end
+    end
+
+    it "gives a valid three-move long scramble" do
+      REPETITIONS.times do
+        scramble = sequencer.scramble(3)
+        scramble.should be_valid_scramble
+        scramble.split(" ").count.should eql 3
+      end
+    end
+
+    it "gives valid normal length scrambles" do
+      REPETITIONS.times do
+        scramble = sequencer.scramble(25)
+        scramble.should be_valid_scramble
+        scramble.split(" ").count.should eql 25
       end
     end
   end

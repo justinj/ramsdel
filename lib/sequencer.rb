@@ -14,6 +14,13 @@ module Ramsdel
       scramble.join(" ")
     end
 
+    def valid_move?(scramble, move)
+      return true if scramble.empty?
+      return false if same_face?(scramble.last, move)
+      return true if scramble.count == 1
+      true
+    end
+
     def random_move
       @axes.sample.sample.sample.join
     end
