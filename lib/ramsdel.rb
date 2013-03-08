@@ -1,10 +1,10 @@
-require_relative "parser"
+#!/usr/bin/env ruby
 
-module Ramsdel
-  class Interpreter
-    def initialize(definition)
-      parser = Parser.new
-      puts parser.tokenize(definition)
-    end
-  end
-end
+require_relative "parser"
+require_relative "move_term"
+
+definition = ARGF.read
+
+parser = Ramsdel::Parser.new
+
+parser.tokenize(definition).map { |definition| Ramsdel::Term::create(definition) }
