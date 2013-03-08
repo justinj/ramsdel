@@ -3,10 +3,11 @@ module Ramsdel
     def initialize(puzzle_definition)
       @axes = make_move_list(puzzle_definition)
       @suffixes = puzzle_definition[:suffixes]
+      @allowed_moves = @axes.flatten
     end
 
     def allow(moves)
-      
+      @allowed_moves = moves
     end
 
     def scramble(length)
@@ -19,6 +20,7 @@ module Ramsdel
     end
 
     def valid_move?(scramble, move)
+      return false unless @allowed_moves.include?(move)
       return true if scramble.empty?
       return false if same_face?(scramble.last, move)
       return true if scramble.count == 1
@@ -26,20 +28,20 @@ module Ramsdel
     end
 
     def random_move
-      @axes.sample.sample.sample.join
+      @axes.sample.sample.sample
     end
 
     def make_move_list(puzzle_definition)
       axes = puzzle_definition[:axes]
       suffixes = puzzle_definition[:suffixes]
-      axes.map { |axis| axis.map { |move| [move].product(suffixes) } }
+      axes.map { |axis| axis.map { |move| suffixes.map { |suffix| move + suffix } } }
     end
     private :make_move_list
     
     def same_axis?(*moves)
       @axes.any? do |axis|
         moves.all? do |move|
-          axis.map { |face| face.map(&:join) }.inject(:+).include? move
+          axis.inject(:+).include? move
         end
       end
     end

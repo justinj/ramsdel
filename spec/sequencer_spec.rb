@@ -1,36 +1,17 @@
 require_relative "spec_helper"
+require_relative "scramble_matchers.rb"
 
 
 describe Ramsdel::Sequencer do
-  class BeValidScramble
-    def matches?(scramble)
-      @scramble = scramble
-      matches_format || @failure = "does not match the format of a scramble"
-      no_subsequent_same_face || @failure = "contains the same face twice in a row"
-      no_same_axis_three_times || @failure = "has redundant moves"
-
-      @failure.nil?
-    end
-
-    def matches_format
-      @scramble =~ /^((U|D|L|R|F|B)('|2)?\ ?)*$/
-    end
-
-    def no_subsequent_same_face
-      @scramble.split(" ").each_cons(2).all? { |(a,b)| a[0] != b[0] }
-    end
-
-    def no_same_axis_three_times
-      sequencer = Ramsdel::Sequencer.new(Ramsdel::Puzzles::THREE_BY_THREE)
-      !@scramble.split(" ").each_cons(3).any? { |moves| sequencer.same_axis?(moves) }
-    end
-
-    def failure_message
-      "\"#@scramble\" #@failure"
-    end
-  end
+  let(:repetitions) { 500 }
   let(:sequencer) { Ramsdel::Sequencer.new(Ramsdel::Puzzles::THREE_BY_THREE) }
-  let(:be_valid_scramble) { BeValidScramble.new }
+  def be_valid_scramble 
+    BeValidScramble.new
+  end
+
+  def be_composed_of(moves)
+    BeComposedOf.new(moves)
+  end
 
   describe "#same_axis?" do
     it "is true if two moves are on the same axis" do
@@ -80,9 +61,8 @@ describe Ramsdel::Sequencer do
   describe "#scramble" do
     # due to the randomness, we should repeat multiple times
     # to avoid false positives
-    REPETITIONS = 500
     it "gives a valid one-move long scramble" do
-      REPETITIONS.times do
+      repetitions.times do
         scramble = sequencer.scramble(1)
         scramble.should be_valid_scramble
         scramble.split(" ").count.should eql 1
@@ -90,7 +70,7 @@ describe Ramsdel::Sequencer do
     end
 
     it "gives a valid two-move long scramble" do
-      REPETITIONS.times do
+      repetitions.times do
         scramble = sequencer.scramble(2)
         scramble.should be_valid_scramble
         scramble.split(" ").count.should eql 2
@@ -98,7 +78,7 @@ describe Ramsdel::Sequencer do
     end
 
     it "gives a valid three-move long scramble" do
-      REPETITIONS.times do
+      repetitions.times do
         scramble = sequencer.scramble(3)
         scramble.should be_valid_scramble
         scramble.split(" ").count.should eql 3
@@ -106,7 +86,7 @@ describe Ramsdel::Sequencer do
     end
 
     it "gives valid normal length scrambles" do
-      REPETITIONS.times do
+      repetitions.times do
         scramble = sequencer.scramble(25)
         scramble.should be_valid_scramble
         scramble.split(" ").count.should eql 25
@@ -115,16 +95,40 @@ describe Ramsdel::Sequencer do
   end
 
   describe "#allow" do
-    REPETITIONS = 500
-    it "explicitly allows certain moves" do
+    it "only includes the allowed moves" do
       sequencer.allow(["R","U"])
-      REPETITIONS.times do
+      repetitions.times do
         scramble = sequencer.scramble(10)
-        scramble.should be_valid_scramble
-        scramble.should =~ /((R|U)('|2)?){10}/
+        scramble.should be_composed_of(%w(R U))
         scramble.split(" ").count.should eql 10
       end
     end
-  end
 
+    it "includes all the allowed moves" do
+      moves = ["R","R'","U"]
+      sequencer.allow(moves)
+      counts = {}
+      moves.each { |move| counts[move] = 0 }
+
+      repetitions.times do
+        scramble = sequencer.scramble(10)
+        scramble.split(" ").each { |move| counts[move] += 1 }
+      end
+
+      counts.values.any? { |count| count == 0 }.should eql false
+    end
+
+    it "defaults to 6 gen" do
+      moves = ["R","L","F","B","U","D"].product(["'","2",""]).map(&:join)
+      counts = {}
+      moves.each { |move| counts[move] = 0 }
+
+      repetitions.times do
+        scramble = sequencer.scramble(10)
+        scramble.split(" ").each { |move| counts[move] += 1 }
+      end
+
+      counts.each { |move,count| count.should_not(eql(0), "#{move} is 0") }
+    end
+  end
 end
