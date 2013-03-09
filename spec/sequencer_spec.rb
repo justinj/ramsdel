@@ -15,9 +15,10 @@ describe Ramsdel::Sequencer do
 
   describe "#same_axis?" do
     it "is true if two moves are on the same axis" do
-      sequencer.same_axis?("F","B").should eql true 
-      sequencer.same_axis?("F","F").should eql true 
-      sequencer.same_axis?("F","B'").should eql true 
+      pairs = [["F", "B"], ["F", "F"], ["F", "B'"]]
+      pairs.each do |pair|
+        sequencer.same_axis?(*pair).should eql true 
+      end
     end
 
     it "is false if two moves are not on the same axis" do
@@ -95,6 +96,7 @@ describe Ramsdel::Sequencer do
   end
 
   describe "#allow" do
+    let(:counts) { Hash.new(0) }
     it "only includes the allowed moves" do
       sequencer.allow(["R","U"])
       repetitions.times do
@@ -104,31 +106,24 @@ describe Ramsdel::Sequencer do
       end
     end
 
-    it "includes all the allowed moves" do
-      moves = ["R","R'","U"]
-      sequencer.allow(moves)
-      counts = {}
-      moves.each { |move| counts[move] = 0 }
-
-      repetitions.times do
-        scramble = sequencer.scramble(10)
-        scramble.split(" ").each { |move| counts[move] += 1 }
+    context "counting" do
+      def count_for moves
+        sequencer.allow(moves)
+        repetitions.times do
+          scramble = sequencer.scramble(10)
+          scramble.split(" ").each { |move| counts[move] += 1 }
+        end
       end
 
-      counts.values.any? { |count| count == 0 }.should eql false
-    end
-
-    it "defaults to 6 gen" do
-      moves = ["R","L","F","B","U","D"].product(["'","2",""]).map(&:join)
-      counts = {}
-      moves.each { |move| counts[move] = 0 }
-
-      repetitions.times do
-        scramble = sequencer.scramble(10)
-        scramble.split(" ").each { |move| counts[move] += 1 }
+      it "includes all the allowed moves" do
+        count_for ["R","R'","U"]
+        counts.values.any? { |count| count == 0 }.should eql false
       end
 
-      counts.each { |move,count| count.should_not(eql(0), "#{move} is 0") }
+      it "defaults to 6 gen" do
+        count_for ["R","L","F","B","U","D"].product(["'","2",""]).map(&:join)
+        counts.each { |move,count| count.should_not(eql(0), "#{move} is 0") }
+      end
     end
   end
 end
