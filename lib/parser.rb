@@ -1,7 +1,7 @@
 module Ramsdel
   class Parser
     def tokenize definition
-      definition.gsub(/\s/, "").split("+")
+      definition.split(/\s*\+\s*/)
     end
   end
 end

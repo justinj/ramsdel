@@ -28,7 +28,7 @@ module Ramsdel
     end
 
     def random_move
-      @axes.sample.sample.sample
+      @allowed_moves.sample
     end
 
     def make_move_list(puzzle_definition)

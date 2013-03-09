@@ -19,14 +19,15 @@ module Ramsdel
 
     private 
 
+    @@SPLITTER = /\s*,\s*/
     def self.make_term(movelist, length)
       case movelist
       when /\[(?<moves>.*?)\]/
-        ExplicitMoveTerm.new($~[:moves].split(","),length)
+        ExplicitMoveTerm.new($~[:moves].split(@@SPLITTER),length)
       when /<(?<moves>.*?)>/
-        ImplicitMoveTerm.new($~[:moves].split(","),length)
+        ImplicitMoveTerm.new($~[:moves].split(@@SPLITTER),length)
       else
-        raise "Unrecognized term #{definition}"
+        ConstantTerm.new(movelist)
       end
     end
 
@@ -56,6 +57,16 @@ module Ramsdel
       def initialize(allowed_moves, length)
         moves = allowed_moves.product(["2","'",""]).map(&:join)
         super(moves,length)
+      end
+    end
+
+    class ConstantTerm
+      def initialize(contents)
+        @contents = contents
+      end
+
+      def generate
+        @contents
       end
     end
 
