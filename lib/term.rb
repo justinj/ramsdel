@@ -1,14 +1,35 @@
+require_relative "sequencer"
+require_relative "puzzles"
+
 module Ramsdel
   module Term
-
     def self.create(definition)
-      case definition
-      when /\[(?<moves>.*?)\](?<length>\d+)/
-        ExplicitMoveTerm.new($~[:moves].split(","),$~[:length].to_i)
-      when /<(?<moves>.*?)>(?<length>\d+)/
-        ImplicitMoveTerm.new($~[:moves].split(","),$~[:length].to_i)
+      parts = definition.split(/\s*\*\s*/)
+      length = 1
+      movelist = ""
+      parts.each do |part|
+        case part
+        when /\d+/; length = part.to_i
+        else; movelist = part
+        end
+      end
+
+      make_term(movelist,length)
+    end
+
+    private 
+
+    def self.make_term(movelist, length)
+      case movelist
+      when /\[(?<moves>.*?)\]/
+        ExplicitMoveTerm.new($~[:moves].split(","),length)
+      when /<(?<moves>.*?)>/
+        ImplicitMoveTerm.new($~[:moves].split(","),length)
+      else
+        raise "Unrecognized term #{definition}"
       end
     end
+
 
     class MoveTerm
 
