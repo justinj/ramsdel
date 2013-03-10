@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/JustinJ/ramsdel.png)](https://travis-ci.org/JustinJ/ramsdel)
+
+
 =======
 RaMSDeL
 =======
