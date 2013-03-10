@@ -1,7 +1,35 @@
 #!/usr/bin/env ruby
 
+require "optparse"
+require "ostruct"
 require_relative "../lib/scrambler"
+require_relative "../lib/version"
 
-scrambler = Ramsdel::Scrambler.new(ARGF.read)
+def main(options)
+  options.source ||= ARGF.read
+  scrambler = Ramsdel::Scrambler.new(options.source)
+  puts scrambler.next
+end
 
-puts scrambler.next
+options = OpenStruct.new
+options.source = nil
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: #$0 [options] <file>"
+
+  opts.on("-e <code>", "--execute <code>", "Execute definition") do |s|
+    options.source = s
+  end
+
+  opts.on_tail("-h", "--help", "Show help") do
+    puts opts
+    exit
+  end
+
+  opts.on_tail("-v", "--version", "Show version") do
+    puts Ramsdel::VERSION
+    exit
+  end
+end.parse!
+
+main(options)
