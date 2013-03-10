@@ -8,14 +8,21 @@ require_relative "../lib/version"
 def main(options)
   options.source ||= ARGF.read
   scrambler = Ramsdel::Scrambler.new(options.source)
-  puts scrambler.next
+  options.count.times do
+    puts scrambler.next
+  end
 end
 
 options = OpenStruct.new
 options.source = nil
+options.count = 0
 
 OptionParser.new do |opts|
   opts.banner = "Usage: #$0 [options] <file>"
+
+  opts.on("-c <count>", "--count <count>", Integer, "Number of scrambles to generate") do |c|
+    options.count = c
+  end
 
   opts.on("-e <code>", "--execute <code>", "Execute definition") do |s|
     options.source = s
