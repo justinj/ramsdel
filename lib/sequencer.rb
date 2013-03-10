@@ -3,7 +3,7 @@ module Ramsdel
     def initialize(puzzle_definition)
       @axes = make_move_list(puzzle_definition)
       @suffixes = puzzle_definition[:suffixes]
-      @allowed_moves = @axes.flatten
+      @allowed_moves = puzzle_definition.fetch(:default_allowed, @axes.flatten)
     end
 
     def allow(moves)
