@@ -6,9 +6,9 @@ class BeValidScramble
 
   def matches?(scramble)
     @scramble = scramble
-    matches_format || @failure = "does not match the format of a scramble"
-    no_subsequent_same_face || @failure = "contains the same face twice in a row"
-    no_same_axis_three_times || @failure = "has redundant moves"
+    matches_format or @failure = "does not match the format of a scramble"
+    no_subsequent_same_face or @failure = "contains the same face twice in a row"
+    no_same_axis_three_times or @failure = "has redundant moves"
 
     @failure.nil?
   end
