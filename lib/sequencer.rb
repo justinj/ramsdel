@@ -20,17 +20,11 @@ module Ramsdel
     end
 
     def valid_move?(scramble, move)
-      if scramble.empty?
-        true
-      elsif same_face?(scramble.last, move)
-        false
-      elsif scramble.count == 1
-        true
-      elsif same_axis?(scramble[-1], scramble[-2], move)
-        false
-      else
-        true
-      end
+      return true if scramble.empty?
+      return false if same_face?(scramble.last, move)
+      return true if scramble.count == 1
+      return false if same_axis?(scramble[-1], scramble[-2], move)
+      true
     end
 
     def random_move
