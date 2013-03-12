@@ -62,31 +62,7 @@ describe Ramsdel::Sequencer do
   describe "#scramble" do
     # due to the randomness, we should repeat multiple times
     # to avoid false positives
-    it "gives a valid one-move long scramble" do
-      repetitions.times do
-        scramble = sequencer.scramble(1)
-        scramble.should be_valid_scramble
-        scramble.split(" ").should have(1).move
-      end
-    end
-
-    it "gives a valid two-move long scramble" do
-      repetitions.times do
-        scramble = sequencer.scramble(2)
-        scramble.should be_valid_scramble
-        scramble.split(" ").should have(2).moves
-      end
-    end
-
-    it "gives a valid three-move long scramble" do
-      repetitions.times do
-        scramble = sequencer.scramble(3)
-        scramble.should be_valid_scramble
-        scramble.split(" ").should have(3).moves
-      end
-    end
-
-    it "gives valid normal length scrambles" do
+    it "gives valid scrambles" do
       repetitions.times do
         scramble = sequencer.scramble(25)
         scramble.should be_valid_scramble
