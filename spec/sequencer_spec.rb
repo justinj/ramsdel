@@ -4,10 +4,6 @@ require_relative "scramble_matchers.rb"
 describe Ramsdel::Sequencer do
   let(:repetitions) { 500 }
   let(:sequencer) { Ramsdel::Sequencer.new(Ramsdel::Puzzles::THREE_BY_THREE) }
-  def be_valid_scramble 
-    BeValidScramble.new
-  end
-
   def be_composed_of(moves)
     BeComposedOf.new(moves)
   end
