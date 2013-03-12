@@ -6,14 +6,6 @@ module Ramsdel
       Term::create(definition)
     end
 
-    it "creates an explicit move term for []" do
-      from("[R,U]*10").should be_an_instance_of Term::ExplicitMoveTerm
-    end
-
-    it "creates an implicit move term for <>" do
-      from("<R,U>*10").should be_an_instance_of Term::ImplicitMoveTerm
-    end
-
     it "creates constants if what was provided was not a term" do
       from("x y").should be_an_instance_of Term::ConstantTerm
     end
