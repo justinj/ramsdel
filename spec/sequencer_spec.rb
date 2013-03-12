@@ -17,23 +17,23 @@ describe Ramsdel::Sequencer do
     it "is true if two moves are on the same axis" do
       pairs = [["F", "B"], ["F", "F"], ["F", "B'"]]
       pairs.each do |pair|
-        sequencer.same_axis?(*pair).should eql true 
+        sequencer.same_axis?(*pair).should be_true
       end
     end
 
     it "is false if two moves are not on the same axis" do
-      sequencer.same_axis?("F","R").should eql false
+      sequencer.same_axis?("F","R").should be_false
     end
   end
 
   describe "#same_face?" do
     it "is true if two moves are on the same face" do
-      sequencer.same_face?("F", "F").should eql true
+      sequencer.same_face?("F", "F").should be_true
     end
 
     it "is false if two moves are not on the same face" do
-      sequencer.same_face?("F","R").should eql false
-      sequencer.same_face?("F","B").should eql false
+      sequencer.same_face?("F","R").should be_false
+      sequencer.same_face?("F","B").should be_false
     end
   end
 
@@ -66,7 +66,7 @@ describe Ramsdel::Sequencer do
       repetitions.times do
         scramble = sequencer.scramble(1)
         scramble.should be_valid_scramble
-        scramble.split(" ").count.should eql 1
+        scramble.split(" ").should have(1).move
       end
     end
 
@@ -74,7 +74,7 @@ describe Ramsdel::Sequencer do
       repetitions.times do
         scramble = sequencer.scramble(2)
         scramble.should be_valid_scramble
-        scramble.split(" ").count.should eql 2
+        scramble.split(" ").should have(2).moves
       end
     end
 
@@ -82,7 +82,7 @@ describe Ramsdel::Sequencer do
       repetitions.times do
         scramble = sequencer.scramble(3)
         scramble.should be_valid_scramble
-        scramble.split(" ").count.should eql 3
+        scramble.split(" ").should have(3).moves
       end
     end
 
@@ -90,7 +90,7 @@ describe Ramsdel::Sequencer do
       repetitions.times do
         scramble = sequencer.scramble(25)
         scramble.should be_valid_scramble
-        scramble.split(" ").count.should eql 25
+        scramble.split(" ").should have(25).moves
       end
     end
   end
@@ -102,7 +102,7 @@ describe Ramsdel::Sequencer do
       repetitions.times do
         scramble = sequencer.scramble(10)
         scramble.should be_composed_of(%w(R U))
-        scramble.split(" ").count.should eql 10
+        scramble.split(" ").should have(10).moves
       end
     end
 
