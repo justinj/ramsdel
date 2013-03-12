@@ -18,7 +18,7 @@ class BeValidScramble
   end
 
   def no_subsequent_same_face
-    @scramble.split(" ").each_cons(2).all? { |(a,b)| a[0] != b[0] }
+    @scramble.split(" ").each_cons(2).all? { |(a,b)| @sequencer.prefix(a) != @sequencer.prefix(b) }
   end
 
   def no_same_axis_three_times
