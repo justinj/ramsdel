@@ -20,11 +20,11 @@ module Ramsdel
     end
 
     def valid_move?(scramble, move)
-      return true if scramble.empty?
+      return true if scramble.count == 0
       return false if same_face?(scramble.last, move)
       return true if scramble.count == 1
       return false if same_axis?(scramble[-1], scramble[-2], move)
-      true
+      return true
     end
 
     def random_move
@@ -41,7 +41,7 @@ module Ramsdel
     def same_axis?(*moves)
       @axes.any? do |axis|
         moves.all? do |move|
-          axis.inject(:+).include? move
+          axis.flatten.include? move
         end
       end
     end

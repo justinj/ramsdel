@@ -13,6 +13,48 @@ describe Ramsdel::Sequencer do
     BeComposedOf.new(moves)
   end
 
+  describe "#valid_move?" do
+    context "empty scramble" do
+      it "allows anything" do
+        sequencer.valid_move?([], "R").should be_true
+        sequencer.valid_move?([], "F'").should be_true
+        sequencer.valid_move?([], "Uw").should be_true
+      end
+    end
+
+    context "1 move scramble" do
+      it "allows unrelated moves" do
+        sequencer.valid_move?(["R"], "F").should be_true
+      end
+
+      it "allows moves on the same axis" do
+        sequencer.valid_move?(["R"], "L")
+      end
+
+      it "doesn't allow moves on the same face" do
+        sequencer.valid_move?(["R"], "R").should be_false
+      end
+    end
+
+    context "longer than 1 move scramble" do
+      it "allows unrelated moves to the last one" do
+        sequencer.valid_move?(["L", "R"], "F").should be_true
+      end
+
+      it "allows moves on the same axis as the last" do
+        sequencer.valid_move?(["D", "R"], "L")
+      end
+
+      it "doesn't allow moves on the same face" do
+        sequencer.valid_move?(["F", "R"], "R").should be_false
+      end
+
+      it "doesn't allow moves on the same axis as the last two" do
+        sequencer.valid_move?(["R", "L"], "R").should be_false
+      end
+    end
+  end
+
   describe "#same_axis?" do
     it "is true if two moves are on the same axis" do
       pairs = [["F", "B"], ["F", "F"], ["F", "B'"]]
@@ -60,8 +102,6 @@ describe Ramsdel::Sequencer do
   end
 
   describe "#scramble" do
-    # due to the randomness, we should repeat multiple times
-    # to avoid false positives
     it "gives valid scrambles" do
       repetitions.times do
         scramble = sequencer.scramble(25)
