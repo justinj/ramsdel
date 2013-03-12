@@ -1,13 +1,30 @@
 module Ramsdel
+  class MoveProvider
+    include Enumerable
+    def initialize(moves)
+      @moves = moves 
+      @enum = to_enum
+    end
+
+    def next
+      @enum.next
+    end
+    
+    def each
+      return to_enum unless block_given?
+      
+      loop { yield @moves.sample }
+    end
+  end
   class Sequencer
     def initialize(puzzle_definition)
       @axes = make_move_list(puzzle_definition)
       @suffixes = puzzle_definition[:suffixes]
-      @allowed_moves = puzzle_definition.fetch(:default_allowed, @axes.flatten)
+      allow puzzle_definition.fetch(:default_allowed, @axes.flatten)
     end
 
     def allow(moves)
-      @allowed_moves = moves
+      @provider = MoveProvider.new(moves)
     end
 
     def scramble(length)
@@ -19,16 +36,16 @@ module Ramsdel
       scramble.join(" ")
     end
 
+    def random_move
+      @provider.next
+    end
+
     def valid_move?(scramble, move)
       return true if scramble.count == 0
       return false if same_face?(scramble.last, move)
       return true if scramble.count == 1
       return false if same_axis?(scramble[-1], scramble[-2], move)
       return true
-    end
-
-    def random_move
-      @allowed_moves.sample
     end
 
     def make_move_list(puzzle_definition)

@@ -1,7 +1,6 @@
 require_relative "spec_helper"
 require_relative "scramble_matchers.rb"
 
-
 describe Ramsdel::Sequencer do
   let(:repetitions) { 500 }
   let(:sequencer) { Ramsdel::Sequencer.new(Ramsdel::Puzzles::THREE_BY_THREE) }
@@ -108,6 +107,11 @@ describe Ramsdel::Sequencer do
         scramble.should be_valid_scramble
         scramble.split(" ").should have(25).moves
       end
+    end
+
+    it "ignores moves that would make the scramble invalid" do
+      Ramsdel::MoveProvider.any_instance.stub(:next).and_return("R","L","R","F")
+      sequencer.scramble(3).should == "R L F"
     end
   end
 
