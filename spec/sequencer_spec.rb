@@ -101,14 +101,6 @@ describe Ramsdel::Sequencer do
   end
 
   describe "#scramble" do
-    it "gives valid scrambles" do
-      repetitions.times do
-        scramble = sequencer.scramble(25)
-        scramble.should be_valid_scramble
-        scramble.split(" ").should have(25).moves
-      end
-    end
-
     it "ignores moves that would make the scramble invalid" do
       Ramsdel::MoveProvider.any_instance.stub(:next).and_return("R","L","R","F")
       sequencer.scramble(3).should == "R L F"
@@ -126,24 +118,15 @@ describe Ramsdel::Sequencer do
       end
     end
 
-    context "counting" do
-      def count_for moves
-        sequencer.allow(moves)
-        repetitions.times do
-          scramble = sequencer.scramble(10)
-          scramble.split(" ").each { |move| counts[move] += 1 }
-        end
+    it "includes all the allowed moves" do
+      sequencer.allow(["R","R'","U"])
+      not_found = ["R","R'","U"]
+      repetitions.times do
+        scramble = sequencer.scramble(10)
+        scramble.split(" ").each { |move| not_found.delete(move) }
+        break if not_found.empty?
       end
-
-      it "includes all the allowed moves" do
-        count_for ["R","R'","U"]
-        counts.values.any? { |count| count == 0 }.should eql false
-      end
-
-      it "defaults to 6 gen" do
-        count_for ["R","L","F","B","U","D"].product(["'","2",""]).map(&:join)
-        counts.each { |move,count| count.should_not(eql(0), "#{move} is 0") }
-      end
+      not_found.should be_empty
     end
   end
 end
