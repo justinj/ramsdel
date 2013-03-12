@@ -56,7 +56,7 @@ module Ramsdel
 
     def suffix(move)
       suffix = @suffixes.sort_by { |s| -s.length }.find { |suffix| move.end_with?(suffix) }
-      suffix || raise("#{move} does not end with a valid suffix")
+      suffix or raise("#{move} does not end with a valid suffix")
     end
   end 
 end
