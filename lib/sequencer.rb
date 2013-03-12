@@ -20,10 +20,10 @@ module Ramsdel
     end
 
     def valid_move?(scramble, move)
-      return false unless @allowed_moves.include?(move)
       return true if scramble.empty?
       return false if same_face?(scramble.last, move)
       return true if scramble.count == 1
+      return false if same_axis?(scramble[-1], scramble[-2], move)
       true
     end
 

@@ -22,7 +22,7 @@ class BeValidScramble
   end
 
   def no_same_axis_three_times
-    !@scramble.split(" ").each_cons(3).any? { |moves| @sequencer.same_axis?(moves) }
+    !@scramble.split(" ").each_cons(3).any? { |moves| @sequencer.same_axis?(*moves) }
   end
 
   def failure_message
