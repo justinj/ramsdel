@@ -41,7 +41,7 @@ module Ramsdel
     def same_axis?(*moves)
       @axes.any? do |axis|
         moves.all? do |move|
-          axis.inject(:+).include? move
+          axis.flatten.include? move
         end
       end
     end
