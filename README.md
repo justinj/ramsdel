@@ -11,5 +11,5 @@ Purpose
 =======
 
 The primary purpose of Ramsdel is in my scramble analysis project,
-however it is provided here in case someone has has the need to generate
+however it is provided here in case someone else has the need to generate
 large amounts of random-move scrambles.
