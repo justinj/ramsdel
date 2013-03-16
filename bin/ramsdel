@@ -15,7 +15,7 @@ end
 
 options = OpenStruct.new
 options.source = nil
-options.count = 0
+options.count = 1
 
 OptionParser.new do |opts|
   opts.banner = "Usage: #$0 [options] <file>"
