@@ -9,7 +9,7 @@ module Ramsdel
       movelist = ""
       parts.each do |part|
         case part
-        when /\d+/; length = part.to_i
+        when /\A\d+\Z/; length = part.to_i
         else; movelist = part
         end
       end

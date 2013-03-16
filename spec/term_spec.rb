@@ -7,7 +7,8 @@ module Ramsdel
     end
 
     it "creates constants if what was provided was not a term" do
-      from("x y").should be_an_instance_of Term::ConstantTerm
+      from("x y").generate.should == "x y"
+      from("y2").generate.should == "y2"
     end
 
     it "creates them with the given length" do
