@@ -48,6 +48,14 @@ will yield results similar to
 
 `R' U R U R U R' U R U' R U' R' U' R' U' R U' R U' R' U' R' U R'`
 
+You can also combine terms with a `+` symbol:
+
+`<R,U> * 3 + <L,D> * 3` yields `U' R' U2 L' D' L2`
+
+If a term doesn't match the format given, it's taken as a constant. This lets you include constants terms in your scrambles:
+
+`<R,U> * 3 + y2 + <R,U> * 3` yields `U2 R' U' y2 U R U`
+
 Puzzles
 =======
 
