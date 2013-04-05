@@ -23,7 +23,7 @@ describe Ramsdel::Sequencer do
       end
 
       it "allows moves on the same axis" do
-        sequencer.valid_move?(["R"], "L")
+        sequencer.valid_move?(["R"], "L").should be_true
       end
 
       it "doesn't allow moves on the same face" do
@@ -37,7 +37,7 @@ describe Ramsdel::Sequencer do
       end
 
       it "allows moves on the same axis as the last" do
-        sequencer.valid_move?(["D", "R"], "L")
+        sequencer.valid_move?(["D", "R"], "L").should be_true
       end
 
       it "doesn't allow moves on the same face" do
