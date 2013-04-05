@@ -113,16 +113,5 @@ describe Ramsdel::Sequencer do
         scramble.split(" ").should have(10).moves
       end
     end
-
-    it "includes all the allowed moves" do
-      sequencer.allow(["R","R'","U"])
-      not_found = ["R","R'","U"]
-      repetitions.times do
-        scramble = sequencer.scramble(10)
-        scramble.split(" ").each { |move| not_found.delete(move) }
-        break if not_found.empty?
-      end
-      not_found.should be_empty
-    end
   end
 end
